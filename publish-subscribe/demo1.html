@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试观察者模式</title>
+    <meta charset="utf-8">
+    <script type="text/javascript">
+
+        var pubsub = {};
+
+        (function (q) {
+
+            var topics = {},
+                    subUid = -1;
+            //发布
+            q.publish = function(topic, args){
+                //当不存在topic的时候直接返回false;
+                if(!topics[topic]){
+                    return false;
+                }
+
+                setTimeout(function(){
+                    var subscribers = topics[topic],
+                            len = subscribers ? subscribers.length : 0;
+                    //当len<=2的时候将不满足条件退出循环
+                    while(len -- ){
+                        subscribers[len].func(topic,args);
+                    }
+                },0);
+
+                return true;
+            };
+
+            //订阅
+            q.subscribe = function(topic,func){
+                if(!topics[topic]){
+                    topics[topic] = [];
+                }
+                var token = (++subUid).toString();
+
+                topics[topic].push({
+                    token:token,
+                    func:func
+                });
+
+                return token;
+            };
+
+            //退订
+            q.unsubscribe = function(token){
+                for(var m in topics){
+                    if(topics[m]){
+                        for(var i = 0 ; i < topics[m].length; i ++){
+                            if((topics[m])[i].token === token){
+                                //删除下标是i的订阅
+                                topics[m].splice(i,1);
+                                return token;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+
+
+        })(pubsub);
+
+
+    </script>
+</head>
+<body>
+
+<h1>测试观察者模式</h1>
+
+</body>
+</html>
