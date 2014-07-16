@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VER2 利用原型实现观察者模式</title>
+    <meta charset="utf-8">
+    <script>
+
+        function Observer() {
+            this.fns = [];
+        }
+
+        Observer.prototype = {
+            /**
+             * 订阅
+             * @param fn
+             */
+            subscribe: function (fn) {
+                this.fns.push(fn);
+            },
+            /**
+             * 取消订阅
+             * @param fn
+             */
+            unsubscribe: function (fn) {
+                /**
+                 * 1.5上的array上的方法，过滤数组返回符合规定的内容元素，第一个参数是返回当前的元素，第二个是下标，第三个是当前的数组
+                 * 返回的是新的数组
+                 */
+                this.fns = this.fns.filter(function (ele, index, list) {
+
+                   return ele !== fn;
+
+                });
+            },
+            /**
+             * 发布订阅
+             * @param o
+             * @param thisObj
+             */
+            update: function (o, thisObj) {
+                var scope = thisObj || window;
+                this.fns.forEach(function(fn){
+                    fn.call(scope,o);
+                });
+            }
+        };
+
+        //test
+        var o = new Observer();
+        var f1 = function(data){
+            console.log('f1: ' + data);
+        };
+
+        var f2 = function(data){
+            console.log("f2: " + data);
+        };
+
+        o.subscribe(f1);
+        o.subscribe(f2);
+        o.update("hello world!");
+
+        o.unsubscribe(f2);
+        o.update("delete f2!");
+
+    </script>
+</head>
+<body>
+<h1>测试观察者模式</h1>
+</body>
+</html>
