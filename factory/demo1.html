@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>工厂模式</title>
+    <meta charset="utf-8">
+    <script>
+
+        var CarFactory = (function(){
+            /**
+             * 内部定义一个类
+             * @param model
+             * @param year
+             * @param miles
+             * @constructor
+             */
+            function Car(model,year,miles){
+                this.model = model;
+                this.year = year;
+                this.miles = miles;
+            }
+            Car.prototype.run = function(){
+                console.log('running...........');
+            };
+            /**
+             * 返回创建car的函数，里面封装的是car的实例化
+             */
+            return function(model,year,miles){
+                return new Car(model,year,miles);
+            }
+        })();
+
+        //通过工厂方法获取car对象
+        var tom = CarFactory("Tom", 2009, 20000);
+        var dudu = CarFactory("Dudu", 2010, 5000);
+
+        console.log(tom);
+        console.log(dudu);
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
